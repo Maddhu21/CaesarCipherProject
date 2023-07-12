@@ -5,23 +5,50 @@ def encrypt():          #encryption function
     shift = int(shift_value.get())
 
     encrypted_text = ""
+    idx = 0
     for char in text:
+        if(idx % 2 == 0): #even index shift right
+            if char.isalpha():
+                if char.isupper():
+                    encrypted_char = chr((ord(char) - 65 + shift) % 26 + 65)
+                else:
+                    encrypted_char = chr((ord(char) - 97 + shift) % 26 + 97)
+                encrypted_text += encrypted_char
+            else:
+                encrypted_text += char
+        else: # odd index shift left
+            if char.isalpha():
+                if char.isupper():
+                    encrypted_char = chr((ord(char) - 65 - shift) % 26 + 65)
+                else:
+                    encrypted_char = chr((ord(char) - 97 - shift) % 26 + 97)
+                encrypted_text += encrypted_char
+            else:
+                encrypted_text += char
+        idx+=1
+
+    #Second encryption
+    cipher_text =""
+    for char in encrypted_text:
+        #normal shift
         if char.isalpha():
             if char.isupper():
                 encrypted_char = chr((ord(char) - 65 + shift) % 26 + 65)
             else:
                 encrypted_char = chr((ord(char) - 97 + shift) % 26 + 97)
-            encrypted_text += encrypted_char
+            cipher_text += encrypted_char
         else:
-            encrypted_text += char
+            cipher_text += char
+
 
     output_text.delete(0, tk.END)
-    output_text.insert(tk.END, encrypted_text)
+    output_text.insert(tk.END, cipher_text)
 
 def decrypt():              #decryption function
     text = plain_text.get()
     shift = int(shift_value.get())
 
+    #backwards, so normal shift first
     decrypted_text = ""
     for char in text:
         if char.isalpha():
@@ -33,8 +60,32 @@ def decrypt():              #decryption function
         else:
             decrypted_text += char
 
+    #shift based on index
+    plaintext = ""
+    idx = 0
+    for char in decrypted_text:
+        if(idx % 2 == 0):
+            if char.isalpha():
+                if char.isupper():
+                    decrypted_char = chr((ord(char) - 65 - shift) % 26 + 65)
+                else:
+                    decrypted_char = chr((ord(char) - 97 - shift) % 26 + 97)
+                plaintext += decrypted_char
+            else:
+                plaintext += char
+        else:
+            if char.isalpha():
+                if char.isupper():
+                    decrypted_char = chr((ord(char) - 65 + shift) % 26 + 65)
+                else:
+                    decrypted_char = chr((ord(char) - 97 + shift) % 26 + 97)
+                plaintext += decrypted_char
+            else:
+                plaintext += char
+        idx+=1
+
     output_text.delete(0, tk.END)
-    output_text.insert(tk.END, decrypted_text)
+    output_text.insert(tk.END, plaintext)
 
 # Tkinter fx
 window = tk.Tk()
